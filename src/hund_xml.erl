@@ -188,7 +188,14 @@ to_xml(
     Ns,
     #xmlElement{
       name = 'md:EntityDescriptor',
-      content = IDPSSODescriptor ++ OrgLocation ++ TechElement,
+      content =
+        IDPSSODescriptor
+        ++
+        OrgLocation
+        ++
+        TechElement
+        ++
+        [#xmlAttribute{name = 'Version', value = "2.0"}],
       attributes =
         [
           #xmlAttribute{name = entityID, value = EntityId},
@@ -403,13 +410,68 @@ to_xml(
     Ns,
     #xmlElement{
       name = 'samlp:Response',
-      content = IssuerElement ++ StatusElement ++ Assertion,
+      content =
+        IssuerElement
+        ++
+        StatusElement
+        ++
+        Assertion
+        ++
+        [#xmlAttribute{name = 'Version', value = "2.0"}],
       attributes =
         [
           #xmlAttribute{name = 'xmlns:samlp', value = "urn:oasis:names:tc:SAML:2.0:protocol"},
           #xmlAttribute{name = 'xmlns:saml', value = "urn:oasis:names:tc:SAML:2.0:assertion"},
           #xmlAttribute{name = 'xmlns:xsi', value = "http://www.w3.org/2001/XMLSchema-instance"},
           #xmlAttribute{name = 'xmlns:xs', value = "http://www.w3.org/2001/XMLSchema"}
+        ]
+    }
+  );
+
+to_xml(
+  #saml_logout_response{
+    destination = Destination,
+    in_response_to = InResponseTo,
+    issuer = Issuer,
+    status = Status,
+    issue_instant = IssueInstant
+  }
+) ->
+  Ns =
+    #xmlNamespace{
+      nodes =
+        [
+          {samlp, "urn:oasis:names:tc:SAML:2.0:protocol"},
+          {saml, "urn:oasis:names:tc:SAML:2.0:assertion"}
+        ]
+    },
+  build_nsinfo(
+    Ns,
+    #xmlElement{
+      name = 'samlp:LogoutResponse',
+      attributes =
+        [
+          #xmlAttribute{name = 'xmlns:samlp', value = "urn:oasis:names:tc:SAML:2.0:protocol"},
+          #xmlAttribute{name = 'xmlns:saml', value = "urn:oasis:names:tc:SAML:2.0:assertion"},
+          #xmlAttribute{name = 'Destination', value = Destination},
+          #xmlAttribute{name = 'InResponseTo', value = InResponseTo},
+          #xmlAttribute{name = 'IssueInstant', value = hund:datetime_to_saml(IssueInstant)},
+          #xmlAttribute{name = 'Version', value = "2.0"}
+        ],
+      content =
+        [
+          #xmlElement{name = 'saml:Issuer', content = [#xmlText{value = Issuer}]},
+          #xmlElement{
+            name = 'samlp:Status',
+            content =
+              [
+                #xmlElement{
+                  name = 'samlp:StatusCode',
+                  attributes =
+                    [#xmlAttribute{name = 'Value', value = hund:rev_status_code_map(Status)}]
+                }
+              ]
+          }
         ]
     }
   ).

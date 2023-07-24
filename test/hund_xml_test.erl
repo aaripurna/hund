@@ -324,3 +324,44 @@ build_saml_assertion_attributes_test() ->
       {attributes_values, ["Alice", "alice@example.com", 20302, "2022-04-03T18:30:00Z"]}
     ]
   ).
+
+
+build_saml_logout_response_test() ->
+  Xml =
+    hund_xml:to_xml(
+      #saml_logout_response{
+        destination = "http://sp.example.com/demo1/index.php?acs",
+        in_response_to = "ONELOGIN_21df91a89767879fc0f7df6a1490c6000c81644d",
+        issue_instant = {{2023, 7, 4}, {20, 30, 0}},
+        status = success,
+        issuer = "http://idp.example.com/metadata.php"
+      }
+    ),
+  Ns =
+    [
+      {samlp, "urn:oasis:names:tc:SAML:2.0:protocol"},
+      {saml, "urn:oasis:names:tc:SAML:2.0:assertion"}
+    ],
+  Decoded =
+    collect_xpath(
+      [
+        {destination, "/samlp:LogoutResponse/@Destination"},
+        {in_response_to, "/samlp:LogoutResponse/@InResponseTo"},
+        {issue_instant, "/samlp:LogoutResponse/@IssueInstant"},
+        {status, "/samlp:LogoutResponse/samlp:Status/samlp:StatusCode/@Value"},
+        {issuer, "/samlp:LogoutResponse/saml:Issuer/text()"}
+      ],
+      Xml,
+      Ns,
+      []
+    ),
+  ?assertEqual(
+    [
+      {destination, "http://sp.example.com/demo1/index.php?acs"},
+      {in_response_to, "ONELOGIN_21df91a89767879fc0f7df6a1490c6000c81644d"},
+      {issue_instant, "2023-07-04T20:30:00Z"},
+      {status, "urn:oasis:names:tc:SAML:2.0:status:Success"},
+      {issuer, "http://idp.example.com/metadata.php"}
+    ],
+    Decoded
+  ).

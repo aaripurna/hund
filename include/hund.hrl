@@ -85,3 +85,13 @@
     authn = #saml_authn{} :: hund:authn()
   }
 ).
+-record(
+  saml_logout_response,
+  {
+    in_response_to = "" :: string(),
+    destination = "" :: string(),
+    issue_instant = calendar:universal_time() :: calendar:datetime(),
+    status = success :: hund:status_code(),
+    issuer = "" :: string()
+  }
+).
