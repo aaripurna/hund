@@ -478,7 +478,7 @@ when is_integer(Year)
 xml_type_schema(_) -> 'xs:string'.
 
 -spec stringify(Scalar :: term()) -> string() | number().
-stringify(Date = {{Year, Month, Day}})
+stringify(Date = {Year, Month, Day})
 when is_integer(Year) andalso is_integer(Month) andalso is_integer(Day) ->
   hund:date_to_saml(Date);
 
