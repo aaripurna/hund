@@ -65,7 +65,7 @@
         [E = #xmlElement{}] ->
           case F(E) of
             {error, V} -> {error, V};
-            {ok, V} -> Resp # Record {Filed = V}
+            {ok, V} -> Resp # Record {Field = V}
           end;
 
         _ -> Resp

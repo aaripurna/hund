@@ -1,10 +1,11 @@
 -module(hund_xml).
 
 -include("../include/hund.hrl").
+-include("../include/hund_xpath_macro.hrl").
 
 -include_lib("xmerl/include/xmerl.hrl").
 
--export([to_xml/1, build_nsinfo/2]).
+-export([to_xml/1, build_nsinfo/2, decode_sp_metadata/1]).
 
 -spec to_xml(Data :: hund:saml_record()) -> #xmlElement{}.
 to_xml(
@@ -405,7 +406,6 @@ to_xml(
           ]
       }
     ],
-  % IssuerElement ++ StatusElement ++ Assertion
   build_nsinfo(
     Ns,
     #xmlElement{
@@ -474,6 +474,68 @@ to_xml(
           }
         ]
     }
+  ).
+
+
+-spec decode_sp_metadata(Doc :: string() | #xmlElement{}) ->
+  {ok, #saml_sp_metadata{}} | {error, term()}.
+decode_sp_metadata(Doc) when is_list(Doc) ->
+  {Xml, _Rest} = xmerl_scan:string(Doc, [{namespace_conformant, true}]),
+  decode_sp_metadata(Xml);
+
+decode_sp_metadata(Xml = #xmlElement{}) ->
+  Ns = [{md, "urn:oasis:names:tc:SAML:2.0:metadata"}, {ds, "http://www.w3.org/2000/09/xmldsig#"}],
+  hund:threaduntil(
+    [
+      ?xpath_attr_required(
+        "/md:EntityDescriptor/@entityID",
+        saml_sp_metadata,
+        entity_id,
+        bad_entity
+      ),
+      ?xpath_attr_required(
+        "/md:EntityDescriptor/md:SPSSODescriptor/md:AssertionConsumerService[@Binding='urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST']/@Location",
+        saml_sp_metadata,
+        consumer_location,
+        missing_consumer_location
+      ),
+      ?xpath_attr(
+        "/md:EntityDescriptor/md:SPSSODescriptor/@AuthnRequestsSigned",
+        saml_sp_metadata,
+        signed_request,
+        fun list_to_atom/1
+      ),
+      ?xpath_attr(
+        "/md:EntityDescriptor/md:SPSSODescriptor/@WantAssertionsSigned",
+        saml_sp_metadata,
+        signed_assertion,
+        fun list_to_atom/1
+      ),
+      ?xpath_attr(
+        "/md:EntityDescriptor/md:SPSSODescriptor/md:SingleLogoutService[@Binding='urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect']/@Location",
+        saml_sp_metadata,
+        logout_location
+      ),
+      ?xpath_text(
+        "/md:EntityDescriptor/md:SPSSODescriptor/md:KeyDescriptor[@use='signing']/ds:KeyInfo/ds:X509Data/ds:X509Certificate/text()",
+        saml_sp_metadata,
+        certificate,
+        fun base64:decode_to_string/1
+      ),
+      ?xpath_recurse(
+        "/md:EntityDescriptor/md:Organization",
+        saml_sp_metadata,
+        org,
+        fun decode_org/1
+      ),
+      ?xpath_recurse(
+        "/md:EntityDescriptor/md:ContactPerson[@contactType='technical']",
+        saml_sp_metadata,
+        tech,
+        fun decode_contact_person/1
+      )
+    ],
+    #saml_sp_metadata{}
   ).
 
 
@@ -553,3 +615,29 @@ when is_integer(Year)
   hund:datetime_to_saml(DateTime);
 
 stringify(Scalar) -> Scalar.
+
+% private
+-spec decode_org(Xml :: #xmlElement{}) -> #saml_org{}.
+decode_org(Xml = #xmlElement{}) ->
+  Ns = [{md, "urn:oasis:names:tc:SAML:2.0:metadata"}, {ds, "http://www.w3.org/2000/09/xmldsig#"}],
+  hund:threaduntil(
+    [
+      ?xpath_text("/md:Organization/md:OrganizationName/text()", saml_org, name),
+      ?xpath_text("/md:Organization/md:OrganizationDisplayName/text()", saml_org, display_name),
+      ?xpath_text("/md:Organization/md:OrganizationURL/text()", saml_org, url)
+    ],
+    #saml_org{}
+  ).
+
+
+% private
+-spec decode_contact_person(Xml :: #xmlElement{}) -> #saml_contact{}.
+decode_contact_person(Xml = #xmlElement{}) ->
+  Ns = [{md, "urn:oasis:names:tc:SAML:2.0:metadata"}, {ds, "http://www.w3.org/2000/09/xmldsig#"}],
+  hund:threaduntil(
+    [
+      ?xpath_text("/md:ContactPerson/md:GivenName/text()", saml_contact, name),
+      ?xpath_text("/md:ContactPerson/md:EmailAddress/text()", saml_contact, email)
+    ],
+    #saml_contact{}
+  ).
