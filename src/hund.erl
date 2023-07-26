@@ -10,6 +10,8 @@
 -type assertion() :: #saml_assertion{}.
 -type authnreq() :: #saml_authnreq{}.
 -type authn() :: #saml_authn{}.
+-type logout_request() :: #saml_logout_request{}.
+-type logout_response() :: #saml_logout_response{}.
 -type saml_record() :: contact()
                      | org()
                      | idp_metadata()
@@ -17,10 +19,22 @@
                      | subject()
                      | assertion()
                      | authn()
-                     | authnreq().
+                     | authnreq()
+                     | logout_request()
+                     | logout_response().
 
 -export_type(
-  [contact/0, org/0, idp_metadata/0, sp_metadata/0, saml_record/0, authnreq/0, assertion/0]
+  [
+    contact/0,
+    org/0,
+    idp_metadata/0,
+    sp_metadata/0,
+    saml_record/0,
+    authnreq/0,
+    assertion/0,
+    logout_request/0,
+    logout_response/0
+  ]
 ).
 
 -type localized_string() :: string() | [{Locale :: atom(), LocalString :: string()}].

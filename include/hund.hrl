@@ -96,3 +96,13 @@
     issuer = "" :: string()
   }
 ).
+-record(
+  saml_logout_request,
+  {
+    issue_instant :: calendar:datetime(),
+    issuer = "" :: string(),
+    sp_name_qualifier = "" :: string(),
+    name_format = "" :: hund:name_format(),
+    name = "" :: string()
+  }
+).

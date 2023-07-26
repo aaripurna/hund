@@ -5,7 +5,9 @@
 
 -include_lib("xmerl/include/xmerl.hrl").
 
--export([to_xml/1, build_nsinfo/2, decode_sp_metadata/1, decode_authn_request/1]).
+-export(
+  [to_xml/1, build_nsinfo/2, decode_sp_metadata/1, decode_authn_request/1, decode_logout_request/1]
+).
 
 -spec to_xml(Data :: hund:saml_record()) -> #xmlElement{}.
 to_xml(
@@ -550,14 +552,11 @@ decode_authn_request(Doc) when is_list(Doc) ->
 
 decode_authn_request(Xml = #xmlElement{}) ->
   Ns =
-    #xmlNamespace{
-      nodes =
-        [
-          {samlp, "urn:oasis:names:tc:SAML:2.0:protocol"},
-          {saml, "urn:oasis:names:tc:SAML:2.0:assertion"},
-          {ds, "http://www.w3.org/2000/09/xmldsig#"}
-        ]
-    },
+    [
+      {samlp, "urn:oasis:names:tc:SAML:2.0:protocol"},
+      {saml, "urn:oasis:names:tc:SAML:2.0:assertion"},
+      {ds, "http://www.w3.org/2000/09/xmldsig#"}
+    ],
   hund:threaduntil(
     [
       ?xpath_text_required(
@@ -594,6 +593,30 @@ decode_authn_request(Xml = #xmlElement{}) ->
       ?xpath_attr("/samlp:AuthnRequest/@Destination", saml_authnreq, destination)
     ],
     #saml_authnreq{}
+  ).
+
+
+-spec decode_logout_request(Doc :: string() | #xmlElement{}) ->
+  {ok, #saml_logout_request{}} | {error, bad_issuer} | {error, term()}.
+decode_logout_request(Doc) when is_list(Doc) ->
+  {Xml, _Rest} = xmerl_scan:string(Doc, [{namespace_conformant, true}]),
+  decode_logout_request(Xml);
+
+decode_logout_request(Xml = #xmlElement{}) ->
+  Ns =
+    [
+      {samlp, "urn:oasis:names:tc:SAML:2.0:protocol"},
+      {saml, "urn:oasis:names:tc:SAML:2.0:assertion"},
+      {ds, "http://www.w3.org/2000/09/xmldsig#"}
+    ],
+  hund:threaduntil([
+    ?xpath_text_required("/samlp:LogoutRequest/saml:Issuer/text()", saml_logout_request, issuer, bad_issuer),
+    ?xpath_attr("/samlp:LogoutRequest/saml:NameID/@Format", saml_logout_request, name_format, fun hund:nameid_map/1),
+    ?xpath_text("/samlp:LogoutRequest/saml:NameID/text()", saml_logout_request, name),
+    ?xpath_attr("/samlp:LogoutRequest/saml:NameID/@SPNameQualifier", saml_logout_request, sp_name_qualifier),
+    ?xpath_attr("/samlp:LogoutRequest/@IssueInstant", saml_logout_request, issue_instant, fun hund:saml_to_datetime/1)
+  ],
+    #saml_logout_request{}
   ).
 
 
