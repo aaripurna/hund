@@ -609,13 +609,33 @@ decode_logout_request(Xml = #xmlElement{}) ->
       {saml, "urn:oasis:names:tc:SAML:2.0:assertion"},
       {ds, "http://www.w3.org/2000/09/xmldsig#"}
     ],
-  hund:threaduntil([
-    ?xpath_text_required("/samlp:LogoutRequest/saml:Issuer/text()", saml_logout_request, issuer, bad_issuer),
-    ?xpath_attr("/samlp:LogoutRequest/saml:NameID/@Format", saml_logout_request, name_format, fun hund:nameid_map/1),
-    ?xpath_text("/samlp:LogoutRequest/saml:NameID/text()", saml_logout_request, name),
-    ?xpath_attr("/samlp:LogoutRequest/saml:NameID/@SPNameQualifier", saml_logout_request, sp_name_qualifier),
-    ?xpath_attr("/samlp:LogoutRequest/@IssueInstant", saml_logout_request, issue_instant, fun hund:saml_to_datetime/1)
-  ],
+  hund:threaduntil(
+    [
+      ?xpath_text_required(
+        "/samlp:LogoutRequest/saml:Issuer/text()",
+        saml_logout_request,
+        issuer,
+        bad_issuer
+      ),
+      ?xpath_attr(
+        "/samlp:LogoutRequest/saml:NameID/@Format",
+        saml_logout_request,
+        name_format,
+        fun hund:nameid_map/1
+      ),
+      ?xpath_text("/samlp:LogoutRequest/saml:NameID/text()", saml_logout_request, name),
+      ?xpath_attr(
+        "/samlp:LogoutRequest/saml:NameID/@SPNameQualifier",
+        saml_logout_request,
+        sp_name_qualifier
+      ),
+      ?xpath_attr(
+        "/samlp:LogoutRequest/@IssueInstant",
+        saml_logout_request,
+        issue_instant,
+        fun hund:saml_to_datetime/1
+      )
+    ],
     #saml_logout_request{}
   ).
 
