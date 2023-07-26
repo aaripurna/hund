@@ -39,6 +39,7 @@
 -type condition() :: #saml_condition{}.
 -type subject_method() :: bearer | holder_of_key | sender_vouches.
 -type authn_class() :: password
+                     | password_protected_transport
                      | internet_protocol
                      | internet_protocol_password
                      | mobile_one_factor_contract
@@ -72,7 +73,8 @@
     map_if/2,
     map_if/1,
     rev_map_authn_class/1,
-    rev_status_code_map/1
+    rev_status_code_map/1,
+    map_authn_class/1
   ]
 ).
 
@@ -137,6 +139,9 @@ rev_subject_method_map(holder_of_key) -> "urn:oasis:names:tc:SAML:2.0:cm:holder-
 rev_subject_method_map(sender_vouches) -> "urn:oasis:names:tc:SAML:2.0:cm:sender-vouches".
 
 -spec rev_map_authn_class(Context :: atom()) -> string().
+rev_map_authn_class(password_protected_transport) ->
+  "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport";
+
 rev_map_authn_class(password) -> "urn:oasis:names:tc:SAML:2.0:ac:classes:Password";
 rev_map_authn_class(internet_protocol) -> "urn:oasis:names:tc:SAML:2.0:ac:classes:InternetProtocol";
 
@@ -151,6 +156,25 @@ rev_map_authn_class(mobile_two_factor_contract) ->
 
 rev_map_authn_class(previous_session) -> "urn:oasis:names:tc:SAML:2.0:ac:classes:PreviousSession";
 rev_map_authn_class(_) -> "urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified".
+
+-spec map_authn_class(AuthnClass :: string()) -> authn_class().
+map_authn_class("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport") ->
+  password_protected_transport;
+
+map_authn_class("urn:oasis:names:tc:SAML:2.0:ac:classes:Password") -> password;
+map_authn_class("urn:oasis:names:tc:SAML:2.0:ac:classes:InternetProtocol") -> internet_protocol;
+
+map_authn_class("urn:oasis:names:tc:SAML:2.0:ac:classes:InternetProtocolPassword") ->
+  internet_protocol_password;
+
+map_authn_class("urn:oasis:names:tc:SAML:2.0:ac:classes:MobileOneFactorContract") ->
+  mobile_one_factor_contract;
+
+map_authn_class("urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract") ->
+  mobile_two_factor_contract;
+
+map_authn_class("urn:oasis:names:tc:SAML:2.0:ac:classes:PreviousSession") -> previous_session;
+map_authn_class(_) -> unspecified.
 
 %% @doc Converts a calendar:datetime() into SAML time string
 

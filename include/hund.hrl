@@ -41,7 +41,8 @@
     destination = "" :: string(),
     issuer = "" :: string(),
     name_format = undefined :: undefined | string(),
-    consumer_location = "" :: string()
+    consumer_location = "" :: string(),
+    authn_class = password :: hund:authn_class()
   }
 ).
 -record(

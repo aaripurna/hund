@@ -5,7 +5,7 @@
 
 -include_lib("xmerl/include/xmerl.hrl").
 
--export([to_xml/1, build_nsinfo/2, decode_sp_metadata/1]).
+-export([to_xml/1, build_nsinfo/2, decode_sp_metadata/1, decode_authn_request/1]).
 
 -spec to_xml(Data :: hund:saml_record()) -> #xmlElement{}.
 to_xml(
@@ -536,6 +536,64 @@ decode_sp_metadata(Xml = #xmlElement{}) ->
       )
     ],
     #saml_sp_metadata{}
+  ).
+
+
+-spec decode_authn_request(Doc :: string() | #xmlElement{}) ->
+  {ok, #saml_authnreq{}}
+  | {error, bad_issuer}
+  | {error, missing_consumer_location}
+  | {error, term()}.
+decode_authn_request(Doc) when is_list(Doc) ->
+  {Xml, _Rest} = xmerl_scan:string(Doc, [{namespace_conformant, true}]),
+  decode_authn_request(Xml);
+
+decode_authn_request(Xml = #xmlElement{}) ->
+  Ns =
+    #xmlNamespace{
+      nodes =
+        [
+          {samlp, "urn:oasis:names:tc:SAML:2.0:protocol"},
+          {saml, "urn:oasis:names:tc:SAML:2.0:assertion"},
+          {ds, "http://www.w3.org/2000/09/xmldsig#"}
+        ]
+    },
+  hund:threaduntil(
+    [
+      ?xpath_text_required(
+        "/samlp:AuthnRequest/saml:Issuer/text()",
+        saml_authnreq,
+        issuer,
+        bad_issuer
+      ),
+      ?xpath_attr_required(
+        "/samlp:AuthnRequest/@AssertionConsumerServiceURL",
+        saml_authnreq,
+        consumer_location,
+        missing_consumer_location
+      ),
+      ?xpath_text(
+        "/samlp:AuthnRequest/samlp:RequestedAuthnContext/saml:AuthnContextClassRef/text()",
+        saml_authnreq,
+        authn_class,
+        fun hund:map_authn_class/1
+      ),
+      ?xpath_attr(
+        "/samlp:AuthnRequest/samlp:NameIDPolicy/@Format",
+        saml_authnreq,
+        name_format,
+        fun hund:nameid_map/1
+      ),
+      ?xpath_attr("/samlp:AuthnRequest/@Version", saml_authnreq, version),
+      ?xpath_attr(
+        "/samlp:AuthnRequest/@IssueInstant",
+        saml_authnreq,
+        issue_instant,
+        fun hund:saml_to_datetime/1
+      ),
+      ?xpath_attr("/samlp:AuthnRequest/@Destination", saml_authnreq, destination)
+    ],
+    #saml_authnreq{}
   ).
 
 
