@@ -83,7 +83,7 @@ to_xml(
     end,
   SSoElement =
     case LoginLocation of
-      undefined -> [];
+      "" -> [];
 
       _ ->
         [
@@ -196,11 +196,10 @@ to_xml(
         ++
         OrgLocation
         ++
-        TechElement
-        ++
-        [#xmlAttribute{name = 'Version', value = "2.0"}],
+        TechElement,
       attributes =
         [
+          #xmlAttribute{name = 'Version', value = "2.0"}
           #xmlAttribute{name = entityID, value = EntityId},
           #xmlAttribute{name = 'xmlns:md', value = proplists:get_value(md, Ns#xmlNamespace.nodes)},
           #xmlAttribute{name = 'xmlns:ds', value = proplists:get_value(ds, Ns#xmlNamespace.nodes)}
@@ -417,11 +416,10 @@ to_xml(
         ++
         StatusElement
         ++
-        Assertion
-        ++
-        [#xmlAttribute{name = 'Version', value = "2.0"}],
+        Assertion,
       attributes =
         [
+          #xmlAttribute{name = 'Version', value = "2.0"},
           #xmlAttribute{name = 'xmlns:samlp', value = "urn:oasis:names:tc:SAML:2.0:protocol"},
           #xmlAttribute{name = 'xmlns:saml', value = "urn:oasis:names:tc:SAML:2.0:assertion"},
           #xmlAttribute{name = 'xmlns:xsi', value = "http://www.w3.org/2001/XMLSchema-instance"},
