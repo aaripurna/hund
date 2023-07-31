@@ -191,12 +191,7 @@ to_xml(
     Ns,
     #xmlElement{
       name = 'md:EntityDescriptor',
-      content =
-        IDPSSODescriptor
-        ++
-        OrgLocation
-        ++
-        TechElement,
+      content = IDPSSODescriptor ++ OrgLocation ++ TechElement,
       attributes =
         [
           #xmlAttribute{name = 'Version', value = "2.0"}
@@ -411,12 +406,7 @@ to_xml(
     Ns,
     #xmlElement{
       name = 'samlp:Response',
-      content =
-        IssuerElement
-        ++
-        StatusElement
-        ++
-        Assertion,
+      content = IssuerElement ++ StatusElement ++ Assertion,
       attributes =
         [
           #xmlAttribute{name = 'Version', value = "2.0"},

@@ -1,5 +1,6 @@
 -module(hund).
 
+-include_lib("public_key/include/public_key.hrl").
 -include_lib("../include/hund.hrl").
 
 -type contact() :: #saml_contact{}.
@@ -88,7 +89,16 @@
     map_if/1,
     rev_map_authn_class/1,
     rev_status_code_map/1,
-    map_authn_class/1
+    map_authn_class/1,
+    convert_fingerprints/1,
+    load_private_key/1,
+    import_private_key/2,
+    load_certificate/1,
+    import_certificate/2,
+    load_metadata/1,
+    load_metadata/2,
+    check_dupe_ets/2,
+    unique_id/0
   ]
 ).
 
@@ -260,3 +270,245 @@ pascal_case(String, Sep) ->
   Chunks = string:split(String, Sep),
   Chunks2 = lists:map(fun string:titlecase/1, Chunks),
   string:join(Chunks2, "").
+
+%% @doc Converts various ascii hex/base64 fingerprint formats to binary
+
+-spec convert_fingerprints([string() | binary()]) -> [binary()].
+convert_fingerprints(FPs) ->
+  FPSources = FPs ++ esaml:config(trusted_fingerprints, []),
+  lists:map(
+    fun
+      (Print) ->
+        if
+          is_list(Print) ->
+            case string:tokens(Print, ":") of
+              [Type, Base64] ->
+                Hash = base64:decode(Base64),
+                case string:to_lower(Type) of
+                  "sha" -> {sha, Hash};
+                  "sha1" -> {sha, Hash};
+                  "md5" -> {md5, Hash};
+                  "sha256" -> {sha256, Hash};
+                  "sha384" -> {sha384, Hash};
+                  "sha512" -> {sha512, Hash}
+                end;
+
+              [_] -> error("unknown fingerprint format");
+              HexParts -> list_to_binary([list_to_integer(P, 16) || P <- HexParts])
+            end;
+
+          is_binary(Print) -> Print;
+          true -> error("unknown fingerprint format")
+        end
+    end,
+    FPSources
+  ).
+
+%% @private
+
+ets_table_owner() ->
+  receive
+    stop -> ok;
+
+    {Caller, check_ready} ->
+      Caller ! {self(), ready},
+      ets_table_owner();
+
+    _ -> ets_table_owner()
+  end.
+
+
+% @doc Loads a private key from a file on disk (or ETS memory cache)
+-spec load_private_key(Path :: string()) -> #'RSAPrivateKey'{}.
+load_private_key(Path) ->
+  case ets:lookup(esaml_privkey_cache, Path) of
+    [{_, Key}] -> Key;
+
+    _ ->
+      {ok, KeyFile} = file:read_file(Path),
+      do_import_private_key(KeyFile, Path)
+  end.
+
+
+-spec import_private_key(EncodedKey :: string(), Identifier :: term()) -> #'RSAPrivateKey'{}.
+import_private_key(EncodedKey, Identifier) ->
+  case ets:lookup(esaml_privkey_cache, Identifier) of
+    [{_, Key}] -> Key;
+    _ -> do_import_private_key(EncodedKey, Identifier)
+  end.
+
+
+do_import_private_key(EncodedKey, Identifier) ->
+  [KeyEntry] = public_key:pem_decode(EncodedKey),
+  Key =
+    case public_key:pem_entry_decode(KeyEntry) of
+      #'PrivateKeyInfo'{privateKey = KeyData} ->
+        KeyDataBin =
+          if
+            is_list(KeyData) -> list_to_binary(KeyData);
+            true -> KeyData
+          end,
+        public_key:der_decode('RSAPrivateKey', KeyDataBin);
+
+      Other -> Other
+    end,
+  ets:insert(esaml_privkey_cache, {Identifier, Key}),
+  Key.
+
+
+-spec load_certificate(Path :: string()) -> binary().
+load_certificate(Path) ->
+  [CertBin] = load_certificate_chain(Path),
+  CertBin.
+
+
+-spec import_certificate(EncodedCert :: string(), Identifier :: term()) -> binary().
+import_certificate(EncodedCert, Identifier) ->
+  [CertBin] = import_certificate_chain(EncodedCert, Identifier),
+  CertBin.
+
+%% @doc Loads certificate chain from a file on disk (or ETS memory cache)
+
+-spec load_certificate_chain(Path :: string()) -> [binary()].
+load_certificate_chain(Path) ->
+  case ets:lookup(esaml_certbin_cache, Path) of
+    [{_, CertChain}] -> CertChain;
+
+    _ ->
+      {ok, EncodedCert} = file:read_file(Path),
+      do_import_certificate_chain(EncodedCert, Path)
+  end.
+
+%% @doc Loads certificate chain from a file on disk (or ETS memory cache)
+
+-spec import_certificate_chain(EncodedCerts :: string(), Identifier :: string()) -> [binary()].
+import_certificate_chain(EncodedCerts, Identifier) ->
+  case ets:lookup(esaml_certbin_cache, Identifier) of
+    [{_, CertChain}] -> CertChain;
+    _ -> do_import_certificate_chain(EncodedCerts, Identifier)
+  end.
+
+
+do_import_certificate_chain(EncodedCerts, Identifier) ->
+  CertChain =
+    [CertBin || {'Certificate', CertBin, not_encrypted} <- public_key:pem_decode(EncodedCerts)],
+  ets:insert(esaml_certbin_cache, {Identifier, CertChain}),
+  CertChain.
+
+%% @doc Reads IDP metadata from a URL (or ETS memory cache) and validates the signature
+
+-spec load_metadata(Url :: string(), Fingerprints :: [string() | binary()]) -> esaml:idp_metadata().
+load_metadata(Url, FPs) ->
+  Fingerprints = convert_fingerprints(FPs),
+  case ets:lookup(esaml_idp_meta_cache, Url) of
+    [{Url, Meta}] -> Meta;
+
+    _ ->
+      {ok, {{_Ver, 200, _}, _Headers, Body}} =
+        httpc:request(get, {Url, []}, [{autoredirect, true}, {timeout, 3000}], []),
+      {Xml, _} = xmerl_scan:string(Body, [{namespace_conformant, true}]),
+      case xmerl_dsig:verify(Xml, Fingerprints) of
+        ok -> ok;
+        Err -> error(Err)
+      end,
+      {ok, Meta = #saml_sp_metadata{}} = hund_xml:decode_sp_metadata(Xml),
+      ets:insert(esaml_idp_meta_cache, {Url, Meta}),
+      Meta
+  end.
+
+%% @doc Reads IDP metadata from a URL (or ETS memory cache)
+
+-spec load_metadata(Url :: string()) -> esaml:idp_metadata().
+load_metadata(Url) ->
+  case ets:lookup(esaml_idp_meta_cache, Url) of
+    [{Url, Meta}] -> Meta;
+
+    _ ->
+      Timeout = application:get_env(esaml, load_metadata_timeout, 15000),
+      {ok, {{_Ver, 200, _}, _Headers, Body}} =
+        httpc:request(get, {Url, []}, [{autoredirect, true}, {timeout, Timeout}], []),
+      {Xml, _} = xmerl_scan:string(Body, [{namespace_conformant, true}]),
+      {ok, Meta = #saml_sp_metadata{}} = hund:decode_sp_metadata(Xml),
+      ets:insert(esaml_idp_meta_cache, {Url, Meta}),
+      Meta
+  end.
+
+%% @doc Checks for a duplicate assertion using ETS tables in memory on all available nodes.
+%%
+%% This is a helper to be used as a DuplicateFun with esaml_sp:validate_assertion/3.
+%% If you aren't using standard erlang distribution for your app, you probably don't
+%% want to use this.
+
+-spec check_dupe_ets(esaml:assertion(), Digest :: binary()) -> ok | {error, duplicate_assertion}.
+check_dupe_ets(A, Digest) ->
+  Now = erlang:localtime_to_universaltime(erlang:localtime()),
+  NowSecs = calendar:datetime_to_gregorian_seconds(Now),
+  DeathSecs = esaml:stale_time(A),
+  {ResL, _BadNodes} =
+    rpc:multicall(
+      erlang,
+      apply,
+      [
+        fun
+          () ->
+            case (catch ets:lookup(esaml_assertion_seen, Digest)) of
+              [{Digest, seen} | _] -> seen;
+              _ -> ok
+            end
+        end,
+        []
+      ]
+    ),
+  case lists:member(seen, ResL) of
+    true -> {error, duplicate_assertion};
+
+    _ ->
+      Until = DeathSecs - NowSecs + 1,
+      rpc:multicall(
+        erlang,
+        apply,
+        [
+          fun
+            () ->
+              case ets:info(esaml_assertion_seen) of
+                undefined ->
+                  Me = self(),
+                  Pid =
+                    spawn(
+                      fun
+                        () ->
+                          register(esaml_ets_table_owner, self()),
+                          ets:new(esaml_assertion_seen, [set, public, named_table]),
+                          ets:new(esaml_privkey_cache, [set, public, named_table]),
+                          ets:new(esaml_certbin_cache, [set, public, named_table]),
+                          ets:insert(esaml_assertion_seen, {Digest, seen}),
+                          Me ! {self(), ping},
+                          ets_table_owner()
+                      end
+                    ),
+                  receive {Pid, ping} -> ok end;
+
+                _ -> ets:insert(esaml_assertion_seen, {Digest, seen})
+              end,
+              {ok, _} =
+                timer:apply_after(
+                  Until * 1000,
+                  erlang,
+                  apply,
+                  [fun () -> ets:delete(esaml_assertion_seen, Digest) end, []]
+                )
+          end,
+          []
+        ]
+      ),
+      ok
+  end.
+
+
+% TODO: switch to uuid_erl hex pkg
+unique_id() ->
+  "id"
+  ++
+  integer_to_list(erlang:system_time())
+  ++
+  integer_to_list(erlang:unique_integer([positive])).
