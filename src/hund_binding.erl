@@ -43,7 +43,7 @@ decode_response(?deflate, SAMLResponse) ->
 decode_response(_, SAMLResponse) ->
   Data = base64:decode(SAMLResponse),
   XmlData =
-    case (catch zlib:unzip(Data)) of
+    case catch zlib:unzip(Data) of
       {'EXIT', _} -> binary_to_list(Data);
       Bin -> binary_to_list(Bin)
     end,

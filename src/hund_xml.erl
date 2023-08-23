@@ -194,7 +194,7 @@ to_xml(
       content = IDPSSODescriptor ++ OrgLocation ++ TechElement,
       attributes =
         [
-          #xmlAttribute{name = 'Version', value = "2.0"}
+          (#xmlAttribute{name = 'Version', value = "2.0"})
           #xmlAttribute{name = entityID, value = EntityId},
           #xmlAttribute{name = 'xmlns:md', value = proplists:get_value(md, Ns#xmlNamespace.nodes)},
           #xmlAttribute{name = 'xmlns:ds', value = proplists:get_value(ds, Ns#xmlNamespace.nodes)}

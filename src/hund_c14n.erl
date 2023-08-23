@@ -86,8 +86,8 @@ attr_lte(AttrA, AttrB) ->
       _ -> false
     end,
   if
-    (PrefixedA) andalso (not PrefixedB) -> false;
-    (not PrefixedA) andalso (PrefixedB) -> true;
+    PrefixedA andalso not PrefixedB -> false;
+    not PrefixedA andalso PrefixedB -> true;
     true -> A =< B
   end.
 
@@ -172,18 +172,15 @@ xml_safe_string([], _) -> [];
 xml_safe_string(Str, Quotes) when is_list(Str) ->
   [Next | Rest] = Str,
   if
-    (not Quotes andalso ([Next] =:= "\n")) -> [Next | xml_safe_string(Rest, Quotes)];
+    not Quotes andalso [Next] =:= "\n" -> [Next | xml_safe_string(Rest, Quotes)];
 
-    (Next < 32) ->
+    Next < 32 ->
       lists:flatten(["&#x" ++ integer_to_list(Next, 16) ++ ";" | xml_safe_string(Rest, Quotes)]);
 
-    (Quotes andalso ([Next] =:= "\"")) -> lists:flatten(["&quot;" | xml_safe_string(Rest, Quotes)]);
-    ([Next] =:= "&") -> lists:flatten(["&amp;" | xml_safe_string(Rest, Quotes)]);
-    ([Next] =:= "<") -> lists:flatten(["&lt;" | xml_safe_string(Rest, Quotes)]);
-
-    (not Quotes andalso ([Next] =:= ">")) ->
-      lists:flatten(["&gt;" | xml_safe_string(Rest, Quotes)]);
-
+    Quotes andalso [Next] =:= "\"" -> lists:flatten(["&quot;" | xml_safe_string(Rest, Quotes)]);
+    [Next] =:= "&" -> lists:flatten(["&amp;" | xml_safe_string(Rest, Quotes)]);
+    [Next] =:= "<" -> lists:flatten(["&lt;" | xml_safe_string(Rest, Quotes)]);
+    not Quotes andalso [Next] =:= ">" -> lists:flatten(["&gt;" | xml_safe_string(Rest, Quotes)]);
     true -> [Next | xml_safe_string(Rest, Quotes)]
   end;
 

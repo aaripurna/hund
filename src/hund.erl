@@ -75,21 +75,14 @@
   ]
 ).
 
+-export([nameid_map/1, rev_nameid_map/1, status_code_map/1, datetime_to_saml/1]).
+-export([threaduntil/2]).
+-export([map_if/2, map_if/1]).
+-export([rev_subject_method_map/1, rev_map_authn_class/1, rev_status_code_map/1, map_authn_class/1]).
+-export([saml_to_datetime/1, date_to_saml/1]).
+-export([start_ets/0, check_dupe_ets/2]).
 -export(
   [
-    threaduntil/2,
-    nameid_map/1,
-    rev_nameid_map/1,
-    status_code_map/1,
-    datetime_to_saml/1,
-    saml_to_datetime/1,
-    date_to_saml/1,
-    rev_subject_method_map/1,
-    map_if/2,
-    map_if/1,
-    rev_map_authn_class/1,
-    rev_status_code_map/1,
-    map_authn_class/1,
     convert_fingerprints/1,
     load_private_key/1,
     import_private_key/2,
@@ -97,7 +90,6 @@
     import_certificate/2,
     load_metadata/1,
     load_metadata/2,
-    check_dupe_ets/2,
     unique_id/0
   ]
 ).
@@ -246,12 +238,12 @@ saml_to_datetime(Stamp) ->
   {{F(YBin), F(MoBin), F(DBin)}, {F(HBin), F(MiBin), F(SBin)}}.
 
 
--spec map_if(term()) -> list(term()).
+-spec map_if(term()) -> [term()].
 map_if("") -> [];
 map_if(undefined) -> [];
 map_if(K) -> [K].
 
--spec map_if(atom(), term()) -> list(term()).
+-spec map_if(atom(), term()) -> [term()].
 map_if(Key, List = [{K, _} | _]) when is_atom(K) ->
   case proplists:get_value(Key, List) of
     undefined -> [];
@@ -306,6 +298,37 @@ convert_fingerprints(FPs) ->
 
 %% @private
 
+start_ets() ->
+  case erlang:whereis(hund_ets_table_owner) of
+    undefined -> create_tables();
+
+    Pid ->
+      Pid ! {self(), check_ready},
+      receive {Pid, ready} -> {ok, Pid} end
+  end.
+
+%% @private
+
+create_tables() ->
+  Caller = self(),
+  Pid =
+    spawn_link(
+      fun
+        () ->
+          register(hund_ets_table_owner, self()),
+          ets:new(hund_assertion_seen, [set, public, named_table]),
+          ets:new(hund_privkey_cache, [set, public, named_table]),
+          ets:new(hund_certbin_cache, [set, public, named_table]),
+          ets:new(hund_idp_meta_cache, [set, public, named_table]),
+          Caller ! {self(), ready},
+          ets_table_owner()
+      end
+    ),
+  receive {Pid, ready} -> ok end,
+  {ok, Pid}.
+
+%% @private
+
 ets_table_owner() ->
   receive
     stop -> ok;
@@ -321,7 +344,7 @@ ets_table_owner() ->
 % @doc Loads a private key from a file on disk (or ETS memory cache)
 -spec load_private_key(Path :: string()) -> #'RSAPrivateKey'{}.
 load_private_key(Path) ->
-  case ets:lookup(esaml_privkey_cache, Path) of
+  case ets:lookup(hund_privkey_cache, Path) of
     [{_, Key}] -> Key;
 
     _ ->
@@ -332,7 +355,7 @@ load_private_key(Path) ->
 
 -spec import_private_key(EncodedKey :: string(), Identifier :: term()) -> #'RSAPrivateKey'{}.
 import_private_key(EncodedKey, Identifier) ->
-  case ets:lookup(esaml_privkey_cache, Identifier) of
+  case ets:lookup(hund_privkey_cache, Identifier) of
     [{_, Key}] -> Key;
     _ -> do_import_private_key(EncodedKey, Identifier)
   end.
@@ -352,7 +375,7 @@ do_import_private_key(EncodedKey, Identifier) ->
 
       Other -> Other
     end,
-  ets:insert(esaml_privkey_cache, {Identifier, Key}),
+  ets:insert(hund_privkey_cache, {Identifier, Key}),
   Key.
 
 
@@ -371,7 +394,7 @@ import_certificate(EncodedCert, Identifier) ->
 
 -spec load_certificate_chain(Path :: string()) -> [binary()].
 load_certificate_chain(Path) ->
-  case ets:lookup(esaml_certbin_cache, Path) of
+  case ets:lookup(hund_certbin_cache, Path) of
     [{_, CertChain}] -> CertChain;
 
     _ ->
@@ -383,7 +406,7 @@ load_certificate_chain(Path) ->
 
 -spec import_certificate_chain(EncodedCerts :: string(), Identifier :: string()) -> [binary()].
 import_certificate_chain(EncodedCerts, Identifier) ->
-  case ets:lookup(esaml_certbin_cache, Identifier) of
+  case ets:lookup(hund_certbin_cache, Identifier) of
     [{_, CertChain}] -> CertChain;
     _ -> do_import_certificate_chain(EncodedCerts, Identifier)
   end.
@@ -392,7 +415,7 @@ import_certificate_chain(EncodedCerts, Identifier) ->
 do_import_certificate_chain(EncodedCerts, Identifier) ->
   CertChain =
     [CertBin || {'Certificate', CertBin, not_encrypted} <- public_key:pem_decode(EncodedCerts)],
-  ets:insert(esaml_certbin_cache, {Identifier, CertChain}),
+  ets:insert(hund_certbin_cache, {Identifier, CertChain}),
   CertChain.
 
 %% @doc Reads IDP metadata from a URL (or ETS memory cache) and validates the signature
@@ -400,7 +423,7 @@ do_import_certificate_chain(EncodedCerts, Identifier) ->
 -spec load_metadata(Url :: string(), Fingerprints :: [string() | binary()]) -> esaml:idp_metadata().
 load_metadata(Url, FPs) ->
   Fingerprints = convert_fingerprints(FPs),
-  case ets:lookup(esaml_idp_meta_cache, Url) of
+  case ets:lookup(hund_idp_meta_cache, Url) of
     [{Url, Meta}] -> Meta;
 
     _ ->
@@ -412,7 +435,7 @@ load_metadata(Url, FPs) ->
         Err -> error(Err)
       end,
       {ok, Meta = #saml_sp_metadata{}} = hund_xml:decode_sp_metadata(Xml),
-      ets:insert(esaml_idp_meta_cache, {Url, Meta}),
+      ets:insert(hund_idp_meta_cache, {Url, Meta}),
       Meta
   end.
 
@@ -420,7 +443,7 @@ load_metadata(Url, FPs) ->
 
 -spec load_metadata(Url :: string()) -> esaml:idp_metadata().
 load_metadata(Url) ->
-  case ets:lookup(esaml_idp_meta_cache, Url) of
+  case ets:lookup(hund_idp_meta_cache, Url) of
     [{Url, Meta}] -> Meta;
 
     _ ->
@@ -429,13 +452,13 @@ load_metadata(Url) ->
         httpc:request(get, {Url, []}, [{autoredirect, true}, {timeout, Timeout}], []),
       {Xml, _} = xmerl_scan:string(Body, [{namespace_conformant, true}]),
       {ok, Meta = #saml_sp_metadata{}} = hund:decode_sp_metadata(Xml),
-      ets:insert(esaml_idp_meta_cache, {Url, Meta}),
+      ets:insert(hund_idp_meta_cache, {Url, Meta}),
       Meta
   end.
 
 %% @doc Checks for a duplicate assertion using ETS tables in memory on all available nodes.
 %%
-%% This is a helper to be used as a DuplicateFun with esaml_sp:validate_assertion/3.
+%% This is a helper to be used as a DuplicateFun with hund_sp:validate_assertion/3.
 %% If you aren't using standard erlang distribution for your app, you probably don't
 %% want to use this.
 
@@ -451,7 +474,7 @@ check_dupe_ets(A, Digest) ->
       [
         fun
           () ->
-            case (catch ets:lookup(esaml_assertion_seen, Digest)) of
+            case catch ets:lookup(hund_assertion_seen, Digest) of
               [{Digest, seen} | _] -> seen;
               _ -> ok
             end
@@ -470,32 +493,32 @@ check_dupe_ets(A, Digest) ->
         [
           fun
             () ->
-              case ets:info(esaml_assertion_seen) of
+              case ets:info(hund_assertion_seen) of
                 undefined ->
                   Me = self(),
                   Pid =
                     spawn(
                       fun
                         () ->
-                          register(esaml_ets_table_owner, self()),
-                          ets:new(esaml_assertion_seen, [set, public, named_table]),
-                          ets:new(esaml_privkey_cache, [set, public, named_table]),
-                          ets:new(esaml_certbin_cache, [set, public, named_table]),
-                          ets:insert(esaml_assertion_seen, {Digest, seen}),
+                          register(hund_ets_table_owner, self()),
+                          ets:new(hund_assertion_seen, [set, public, named_table]),
+                          ets:new(hund_privkey_cache, [set, public, named_table]),
+                          ets:new(hund_certbin_cache, [set, public, named_table]),
+                          ets:insert(hund_assertion_seen, {Digest, seen}),
                           Me ! {self(), ping},
                           ets_table_owner()
                       end
                     ),
                   receive {Pid, ping} -> ok end;
 
-                _ -> ets:insert(esaml_assertion_seen, {Digest, seen})
+                _ -> ets:insert(hund_assertion_seen, {Digest, seen})
               end,
               {ok, _} =
                 timer:apply_after(
                   Until * 1000,
                   erlang,
                   apply,
-                  [fun () -> ets:delete(esaml_assertion_seen, Digest) end, []]
+                  [fun () -> ets:delete(hund_assertion_seen, Digest) end, []]
                 )
           end,
           []
