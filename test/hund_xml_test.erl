@@ -106,6 +106,7 @@ build_saml_assertion_test() ->
         recipient = "urn:idp-test:com"
       }
     ),
+  xmerl:export([Xml], xmerl_xml),
   Ns =
     [
       {samlp, "urn:oasis:names:tc:SAML:2.0:protocol"},

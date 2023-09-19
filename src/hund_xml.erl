@@ -316,7 +316,7 @@ to_xml(
             #xmlElement{
               name = 'saml:AudienceRestriction',
               content =
-                [#xmlElement{name = 'saml:Audience', content = [#xmlText{value = Audience}]}]
+                [#xmlElement{name = 'saml:Audience', content = [#xmlText{value = stringify(Audience)}]}]
             }
           ]
       }
@@ -702,6 +702,8 @@ when is_integer(Year)
      andalso is_integer(Minute)
      andalso is_integer(Second) ->
   hund:datetime_to_saml(DateTime);
+
+stringify(Scalar) when is_atom(Scalar) -> atom_to_binary(Scalar);
 
 stringify(Scalar) -> Scalar.
 

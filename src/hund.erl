@@ -195,12 +195,13 @@ map_authn_class(_) -> unspecified.
 %% @doc Converts a calendar:datetime() into SAML time string
 
 -spec datetime_to_saml(calendar:datetime()) -> datetime().
-datetime_to_saml(Time) ->
+datetime_to_saml(Time) when is_tuple(Time) ->
   {{Y, Mo, D}, {H, Mi, S}} = Time,
   lists:flatten(
     io_lib:format("~4.10.0B-~2.10.0B-~2.10.0BT~2.10.0B:~2.10.0B:~2.10.0BZ", [Y, Mo, D, H, Mi, S])
-  ).
+  );
 
+datetime_to_saml(_Time) -> "".
 
 -spec date_to_saml(calendar:date()) -> string() | binary().
 date_to_saml(Date) ->
