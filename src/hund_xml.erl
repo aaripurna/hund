@@ -25,7 +25,7 @@ to_xml(
   Ns =
     #xmlNamespace{
       nodes =
-        [{md, "urn:oasis:names:tc:SAML:2.0:metadata"}, {ds, "http://www.w3.org/2000/09/xmldsig#"}]
+        [{md, 'urn:oasis:names:tc:SAML:2.0:metadata'}, {ds, 'http://www.w3.org/2000/09/xmldsig#'}]
     },
   KeyDescriptor =
     case is_binary(Certificate) of
@@ -236,10 +236,10 @@ to_xml(
     #xmlNamespace{
       nodes =
         [
-          {samlp, "urn:oasis:names:tc:SAML:2.0:protocol"},
-          {saml, "urn:oasis:names:tc:SAML:2.0:assertion"},
-          {xsi, "http://www.w3.org/2001/XMLSchema-instance"},
-          {xs, "http://www.w3.org/2001/XMLSchema"}
+          {samlp, 'urn:oasis:names:tc:SAML:2.0:protocol'},
+          {saml, 'urn:oasis:names:tc:SAML:2.0:assertion'},
+          {xsi, 'http://www.w3.org/2001/XMLSchema-instance'},
+          {xs, 'http://www.w3.org/2001/XMLSchema'}
         ]
     },
   IssuerElement = [#xmlElement{name = 'saml:Issuer', content = [#xmlText{value = Issuer}]}],
@@ -431,8 +431,8 @@ to_xml(
     #xmlNamespace{
       nodes =
         [
-          {samlp, "urn:oasis:names:tc:SAML:2.0:protocol"},
-          {saml, "urn:oasis:names:tc:SAML:2.0:assertion"}
+          {samlp, 'urn:oasis:names:tc:SAML:2.0:protocol'},
+          {saml, 'urn:oasis:names:tc:SAML:2.0:assertion'}
         ]
     },
   build_nsinfo(
