@@ -5,8 +5,17 @@
 
 -include_lib("xmerl/include/xmerl.hrl").
 
+-type xml_thing() :: #xmlDocument{}.
+
 -export(
-  [to_xml/1, build_nsinfo/2, decode_sp_metadata/1, decode_authn_request/1, decode_logout_request/1]
+  [
+    to_xml/1,
+    sign_xml/3,
+    build_nsinfo/2,
+    decode_sp_metadata/1,
+    decode_authn_request/1,
+    decode_logout_request/1
+  ]
 ).
 
 -spec to_xml(Data :: hund:saml_record()) -> #xmlElement{}.
@@ -25,7 +34,10 @@ to_xml(
   Ns =
     #xmlNamespace{
       nodes =
-        [{md, 'urn:oasis:names:tc:SAML:2.0:metadata'}, {ds, 'http://www.w3.org/2000/09/xmldsig#'}]
+        [
+          {"md", 'urn:oasis:names:tc:SAML:2.0:metadata'},
+          {"ds", 'http://www.w3.org/2000/09/xmldsig#'}
+        ]
     },
   KeyDescriptor =
     case is_binary(Certificate) of
@@ -236,10 +248,10 @@ to_xml(
     #xmlNamespace{
       nodes =
         [
-          {samlp, 'urn:oasis:names:tc:SAML:2.0:protocol'},
-          {saml, 'urn:oasis:names:tc:SAML:2.0:assertion'},
-          {xsi, 'http://www.w3.org/2001/XMLSchema-instance'},
-          {xs, 'http://www.w3.org/2001/XMLSchema'}
+          {"samlp", 'urn:oasis:names:tc:SAML:2.0:protocol'},
+          {"saml", 'urn:oasis:names:tc:SAML:2.0:assertion'},
+          {"xsi", 'http://www.w3.org/2001/XMLSchema-instance'},
+          {"xs", 'http://www.w3.org/2001/XMLSchema'}
         ]
     },
   IssuerElement = [#xmlElement{name = 'saml:Issuer', content = [#xmlText{value = Issuer}]}],
@@ -316,7 +328,12 @@ to_xml(
             #xmlElement{
               name = 'saml:AudienceRestriction',
               content =
-                [#xmlElement{name = 'saml:Audience', content = [#xmlText{value = stringify(Audience)}]}]
+                [
+                  #xmlElement{
+                    name = 'saml:Audience',
+                    content = [#xmlText{value = stringify(Audience)}]
+                  }
+                ]
             }
           ]
       }
@@ -431,11 +448,11 @@ to_xml(
     #xmlNamespace{
       nodes =
         [
-          {samlp, 'urn:oasis:names:tc:SAML:2.0:protocol'},
-          {saml, 'urn:oasis:names:tc:SAML:2.0:assertion'}
+          {"samlp", 'urn:oasis:names:tc:SAML:2.0:protocol'},
+          {"saml", 'urn:oasis:names:tc:SAML:2.0:assertion'}
         ]
     },
-  build_nsinfo(
+  esaml_util:build_nsinfo(
     Ns,
     #xmlElement{
       name = 'samlp:LogoutResponse',
@@ -465,6 +482,43 @@ to_xml(
         ]
     }
   ).
+
+
+-spec sign_xml(Xml :: #xmlDocument{}, Path :: string(), fun((xml_thing()) -> xml_thing())) ->
+  {ok, #xmlDocument{}} | {error, term()}.
+sign_xml(Xml, Path, F) ->
+  Ns =
+    #xmlNamespace{
+      nodes =
+        [
+          {"samlp", 'urn:oasis:names:tc:SAML:2.0:protocol'},
+          {"saml", 'urn:oasis:names:tc:SAML:2.0:assertion'},
+          {"xsi", 'http://www.w3.org/2001/XMLSchema-instance'},
+          {"xs", 'http://www.w3.org/2001/XMLSchema'}
+        ]
+    },
+  case string:tokens(Path, "/") of
+    [] -> F(Xml);
+    [_Root] -> F(Xml);
+
+    Paths ->
+      Last = lists:last(Paths),
+      Rest = lists:droplast(Paths),
+      NewPath = lists:flatten("/" ++ lists:join("/", Rest) ++ "/*[not(self::" ++ Last ++ ")]"),
+      OtherEl =
+        case xmerl_xpath:string(NewPath, Xml, [{namespace, Ns}]) of
+          undefined -> [];
+          [] -> [];
+          Result -> Result
+        end,
+      case xmerl_xpath:string(Path, Xml, [{namespace, Ns}]) of
+        [Element] ->
+          Res = F(Element),
+          {ok, Xml#xmlElement{content = [Res] ++ OtherEl}};
+
+        _ -> {error, invalid_xpath}
+      end
+  end.
 
 
 -spec decode_sp_metadata(Doc :: string() | #xmlElement{}) ->
@@ -704,7 +758,6 @@ when is_integer(Year)
   hund:datetime_to_saml(DateTime);
 
 stringify(Scalar) when is_atom(Scalar) -> atom_to_binary(Scalar);
-
 stringify(Scalar) -> Scalar.
 
 % private

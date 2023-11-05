@@ -203,6 +203,7 @@ datetime_to_saml(Time) when is_tuple(Time) ->
 
 datetime_to_saml(_Time) -> "".
 
+
 -spec date_to_saml(calendar:date()) -> string() | binary().
 date_to_saml(Date) ->
   {Year, Month, Day} = Date,
