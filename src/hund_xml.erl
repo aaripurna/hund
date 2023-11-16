@@ -676,7 +676,8 @@ decode_logout_request(Xml = #xmlElement{}) ->
         saml_logout_request,
         issue_instant,
         fun hund:saml_to_datetime/1
-      )
+      ),
+      ?xpath_text("/samlp:LogoutRequest/samlp:SessionIndex/text()", saml_logout_request, session_index)
     ],
     #saml_logout_request{}
   ).

@@ -103,6 +103,7 @@
     issuer = "" :: string(),
     sp_name_qualifier = "" :: string(),
     name_format = "" :: hund:name_format(),
-    name = "" :: string()
+    name = "" :: string(),
+    session_index = "" :: string()
   }
 ).
