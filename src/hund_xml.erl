@@ -481,6 +481,52 @@ to_xml(
           }
         ]
     }
+  );
+
+to_xml(
+  #saml_logout_request{
+    issue_instant = IssueInstant,
+    issuer = Issuer,
+    sp_name_qualifier = SpNameQualifier,
+    name_format = NameFormat,
+    name = Name,
+    destination = Destination
+  }
+) ->
+  Ns =
+    #xmlNamespace{
+      nodes =
+        [
+          {"samlp", 'urn:oasis:names:tc:SAML:2.0:protocol'},
+          {"saml", 'urn:oasis:names:tc:SAML:2.0:assertion'}
+        ]
+    },
+  build_nsinfo(
+    Ns,
+    #xmlElement{
+      name = 'samlp:LogoutRequest',
+      attributes =
+        [
+          #xmlAttribute{name = 'xmlns:samlp', value = "urn:oasis:names:tc:SAML:2.0:protocol"},
+          #xmlAttribute{name = 'xmlns:saml', value = "urn:oasis:names:tc:SAML:2.0:assertion"},
+          #xmlAttribute{name = 'Destination', value = Destination},
+          #xmlAttribute{name = 'IssueInstant', value = hund:datetime_to_saml(IssueInstant)},
+          #xmlAttribute{name = 'Version', value = "2.0"}
+        ],
+      content =
+        [
+          #xmlElement{name = 'saml:Issuer', content = [#xmlText{value = Issuer}]},
+          #xmlElement{
+            name = 'saml:NameID',
+            attributes =
+              [
+                #xmlAttribute{name = 'SPNameQualifier', value = SpNameQualifier},
+                #xmlAttribute{name = 'Format', value = hund:rev_nameid_map(NameFormat)}
+              ],
+            content = [#xmlText{value = Name}]
+          }
+        ]
+    }
   ).
 
 
@@ -677,7 +723,11 @@ decode_logout_request(Xml = #xmlElement{}) ->
         issue_instant,
         fun hund:saml_to_datetime/1
       ),
-      ?xpath_text("/samlp:LogoutRequest/samlp:SessionIndex/text()", saml_logout_request, session_index)
+      ?xpath_text(
+        "/samlp:LogoutRequest/samlp:SessionIndex/text()",
+        saml_logout_request,
+        session_index
+      )
     ],
     #saml_logout_request{}
   ).
