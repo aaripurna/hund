@@ -2,7 +2,7 @@
   application,
   hund,
   [
-    {description, "An OTP library"},
+    {description, "an OTP library to generate SAML IDP XML and basic utilities"},
     {vsn, "0.1.0"},
     {registered, []},
     {applications, [kernel, stdlib]},
