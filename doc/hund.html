@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.30.7">
+    <meta name="project" content="hund v0.1.1">
+
+    <title>hund — hund v0.1.1</title>
+    <link rel="stylesheet" href="dist/html-erlang-BDSMJ657.css" />
+
+
+    <script src="dist/handlebars.runtime-NWIB6V2M.js"></script>
+    <script src="dist/handlebars.templates-EPF2X7PV.js"></script>
+    <script src="dist/sidebar_items-3D169246.js"></script>
+
+      <script src="docs_config.js"></script>
+
+    <script async src="dist/html-J2ASZTQE.js"></script>
+
+
+  </head>
+  <body data-type="modules" class="page-module">
+    <script>
+
+      try {
+        var settings = JSON.parse(localStorage.getItem('ex_doc:settings') || '{}');
+
+        if (settings.theme === 'dark' ||
+           ((settings.theme === 'system' || settings.theme == null) &&
+             window.matchMedia('(prefers-color-scheme: dark)').matches)
+           ) {
+          document.body.classList.add('dark')
+        }
+      } catch (error) { }
+    </script>
+
+<div class="main">
+
+<button class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+  <form class="sidebar-search" action="search.html">
+    <label class="search-label">
+      <span class="sr-only">Search documentation of hund</span>
+      <input name="q" type="text" class="search-input" placeholder="Search..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+    </label>
+    <button type="submit" class="search-button" aria-label="Submit Search">
+      <i class="ri-search-2-line" aria-hidden="true" title="Submit search"></i>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+      <i class="ri-close-line ri-lg" title="Cancel search"></i>
+    </button>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+
+    <div class="sidebar-projectDetails">
+      <a href="readme.html" class="sidebar-projectName" translate="no">
+hund
+      </a>
+      <div class="sidebar-projectVersion" translate="no">
+        v0.1.1
+      </div>
+    </div>
+    <ul id="sidebar-listNav" class="sidebar-listNav" role="tablist">
+      <li>
+        <button id="extras-list-tab-button" role="tab" data-type="extras" aria-controls="extras-tab-panel" aria-selected="true" tabindex="0">
+Pages
+        </button>
+      </li>
+
+        <li>
+          <button id="modules-list-tab-button" role="tab" data-type="modules" aria-controls="modules-tab-panel" aria-selected="false" tabindex="-1">
+            Modules
+          </button>
+        </li>
+
+
+    </ul>
+  </div>
+
+  <div id="extras-tab-panel" class="sidebar-tabpanel" role="tabpanel" aria-labelledby="extras-list-tab-button">
+    <ul id="extras-full-list" class="full-list"></ul>
+  </div>
+
+    <div id="modules-tab-panel" class="sidebar-tabpanel" role="tabpanel" aria-labelledby="modules-list-tab-button" hidden>
+      <ul id="modules-full-list" class="full-list"></ul>
+    </div>
+
+
+</nav>
+
+<main class="content">
+  <output role="status" id="toast"></output>
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+<h1>
+<button class="icon-action display-settings">
+  <i class="ri-settings-3-line"></i>
+  <span class="sr-only">Settings</span>
+</button>
+
+
+    <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L1" title="View Source" class="icon-action" rel="help">
+      <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+      <span class="sr-only">View Source</span>
+    </a>
+
+  <span translate="no">hund</span> 
+  <small class="app-vsn" translate="no">(hund v0.1.1)</small>
+
+</h1>
+
+
+
+  <section id="summary" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#summary">
+        <i class="ri-link-m" aria-hidden="true"></i>
+      </a>
+      <span class="text">Summary</span>
+    </h1>
+<div class="summary-types summary">
+  <h2>
+    <a href="#types">Types</a>
+  </h2>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:assertion/0" translate="no">assertion/0</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:authn/0" translate="no">authn/0</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:authn_class/0" translate="no">authn_class/0</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:authnreq/0" translate="no">authnreq/0</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:condition/0" translate="no">condition/0</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:contact/0" translate="no">contact/0</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:datetime/0" translate="no">datetime/0</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:idp_metadata/0" translate="no">idp_metadata/0</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:localized_string/0" translate="no">localized_string/0</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:logout_request/0" translate="no">logout_request/0</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:logout_response/0" translate="no">logout_response/0</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:name_format/0" translate="no">name_format/0</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:org/0" translate="no">org/0</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:saml_record/0" translate="no">saml_record/0</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:sp_metadata/0" translate="no">sp_metadata/0</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:status_code/0" translate="no">status_code/0</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:subject/0" translate="no">subject/0</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:subject_method/0" translate="no">subject_method/0</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:version/0" translate="no">version/0</a>
+
+      </div>
+
+    </div>
+
+</div>
+<div class="summary-functions summary">
+  <h2>
+    <a href="#functions">Functions</a>
+  </h2>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#check_dupe_ets/2" translate="no">check_dupe_ets(A, Digest)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Checks for a duplicate assertion using ETS tables in memory on all available nodes.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#convert_fingerprints/1" translate="no">convert_fingerprints(FPs)</a>
+
+      </div>
+
+        <div class="summary-synopsis">Converts various ascii hex/base64 fingerprint formats to binary</div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#date_to_saml/1" translate="no">date_to_saml(Date)</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#datetime_to_saml/1" translate="no">datetime_to_saml(Time)</a>
+
+      </div>
+
+        <div class="summary-synopsis">Converts a calendar:datetime() into SAML time string</div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#import_certificate/2" translate="no">import_certificate(EncodedCert, Identifier)</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#import_private_key/2" translate="no">import_private_key(EncodedKey, Identifier)</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#load_certificate/1" translate="no">load_certificate(Path)</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#load_metadata/1" translate="no">load_metadata(Url)</a>
+
+      </div>
+
+        <div class="summary-synopsis">Reads IDP metadata from a URL (or ETS memory cache)</div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#load_metadata/2" translate="no">load_metadata(Url, Fingerprints)</a>
+
+      </div>
+
+        <div class="summary-synopsis">Reads IDP metadata from a URL (or ETS memory cache) and validates the signature</div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#load_private_key/1" translate="no">load_private_key(Path)</a>
+
+      </div>
+
+        <div class="summary-synopsis">Loads a private key from a file on disk (or ETS memory cache)</div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#map_authn_class/1" translate="no">map_authn_class(AuthnClass)</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#map_if/1" translate="no">map_if(K)</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#map_if/2" translate="no">map_if(Key, List)</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#nameid_map/1" translate="no">nameid_map(S)</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#rev_map_authn_class/1" translate="no">rev_map_authn_class(Context)</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#rev_nameid_map/1" translate="no">rev_nameid_map(_)</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#rev_status_code_map/1" translate="no">rev_status_code_map(Status)</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#rev_subject_method_map/1" translate="no">rev_subject_method_map(_)</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#saml_to_datetime/1" translate="no">saml_to_datetime(Stamp)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Converts a SAML time string into a calendar:datetime()</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#status_code_map/1" translate="no">status_code_map(Urn)</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#threaduntil/2" translate="no">threaduntil(Rest, InitAcc)</a>
+
+      </div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#unique_id/0" translate="no">unique_id()</a>
+
+      </div>
+
+    </div>
+
+</div>
+
+  </section>
+
+
+  <section id="types" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#types">
+        <i class="ri-link-m" aria-hidden="true"></i>
+      </a>
+      <span class="text">Types</span>
+    </h1>
+    <div class="types-list">
+<section class="detail" id="t:assertion/0">
+
+  <div class="detail-header">
+    <a href="#t:assertion/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">assertion/0</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L11" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-type</span> assertion() :: #saml_assertion{}.</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:authn/0">
+
+  <div class="detail-header">
+    <a href="#t:authn/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">authn/0</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L13" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-type</span> authn() :: #saml_authn{}.</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:authn_class/0">
+
+  <div class="detail-header">
+    <a href="#t:authn_class/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">authn_class/0</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L56" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-type</span> authn_class() ::
+    password | password_protected_transport | internet_protocol | internet_protocol_password |
+    mobile_one_factor_contract | mobile_two_factor_contract | previous_session | unspecified.</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:authnreq/0">
+
+  <div class="detail-header">
+    <a href="#t:authnreq/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">authnreq/0</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L12" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-type</span> authnreq() :: #saml_authnreq{}.</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:condition/0">
+
+  <div class="detail-header">
+    <a href="#t:condition/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">condition/0</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L54" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-type</span> condition() :: #saml_condition{}.</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:contact/0">
+
+  <div class="detail-header">
+    <a href="#t:contact/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">contact/0</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L6" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-type</span> contact() :: #saml_contact{}.</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:datetime/0">
+
+  <div class="detail-header">
+    <a href="#t:datetime/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">datetime/0</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L53" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-type</span> datetime() :: string() | binary().</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:idp_metadata/0">
+
+  <div class="detail-header">
+    <a href="#t:idp_metadata/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">idp_metadata/0</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L8" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-type</span> idp_metadata() :: #saml_idp_metadata{}.</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:localized_string/0">
+
+  <div class="detail-header">
+    <a href="#t:localized_string/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">localized_string/0</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L41" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-type</span> localized_string() :: string() | [{Locale :: atom(), LocalString :: string()}].</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:logout_request/0">
+
+  <div class="detail-header">
+    <a href="#t:logout_request/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">logout_request/0</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L14" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-type</span> logout_request() :: #saml_logout_request{}.</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:logout_response/0">
+
+  <div class="detail-header">
+    <a href="#t:logout_response/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">logout_response/0</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L15" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-type</span> logout_response() :: #saml_logout_response{}.</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:name_format/0">
+
+  <div class="detail-header">
+    <a href="#t:name_format/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">name_format/0</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L42" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-type</span> name_format() :: email | x509 | windows | krb | persistent | transient | unknown.</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:org/0">
+
+  <div class="detail-header">
+    <a href="#t:org/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">org/0</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L7" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-type</span> org() :: #saml_org{}.</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:saml_record/0">
+
+  <div class="detail-header">
+    <a href="#t:saml_record/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">saml_record/0</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L16" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-type</span> saml_record() ::
+    <a href="#t:contact/0">contact</a>() |
+    <a href="#t:org/0">org</a>() |
+    <a href="#t:idp_metadata/0">idp_metadata</a>() |
+    <a href="#t:sp_metadata/0">sp_metadata</a>() |
+    <a href="#t:subject/0">subject</a>() |
+    <a href="#t:assertion/0">assertion</a>() |
+    <a href="#t:authn/0">authn</a>() |
+    <a href="#t:authnreq/0">authnreq</a>() |
+    <a href="#t:logout_request/0">logout_request</a>() |
+    <a href="#t:logout_response/0">logout_response</a>().</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:sp_metadata/0">
+
+  <div class="detail-header">
+    <a href="#t:sp_metadata/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">sp_metadata/0</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L9" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-type</span> sp_metadata() :: #saml_sp_metadata{}.</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:status_code/0">
+
+  <div class="detail-header">
+    <a href="#t:status_code/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">status_code/0</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L43" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-type</span> status_code() ::
+    success | request_error | response_error | bad_version | authn_failed | bad_attr | denied |
+    bad_binding | unknown.</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:subject/0">
+
+  <div class="detail-header">
+    <a href="#t:subject/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">subject/0</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L10" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-type</span> subject() :: #saml_subject{}.</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:subject_method/0">
+
+  <div class="detail-header">
+    <a href="#t:subject_method/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">subject_method/0</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L55" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-type</span> subject_method() :: bearer | holder_of_key | sender_vouches.</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:version/0">
+
+  <div class="detail-header">
+    <a href="#t:version/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">version/0</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L52" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-type</span> version() :: string().</pre>
+
+      </div>
+
+
+  </section>
+</section>
+
+    </div>
+  </section>
+
+  <section id="functions" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#functions">
+        <i class="ri-link-m" aria-hidden="true"></i>
+      </a>
+      <span class="text">Functions</span>
+    </h1>
+    <div class="functions-list">
+<section class="detail" id="check_dupe_ets/2">
+
+  <div class="detail-header">
+    <a href="#check_dupe_ets/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">check_dupe_ets(A, Digest)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L468" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> check_dupe_ets(<a href="https://hexdocs.pm/esaml/esaml.html#t:assertion/0">esaml:assertion</a>(), Digest :: binary()) -> ok | {error, duplicate_assertion}.</pre>
+
+      </div>
+
+<p>Checks for a duplicate assertion using ETS tables in memory on all available nodes.</p>This is a helper to be used as a DuplicateFun with hund_sp:validate_assertion/3. If you aren't using standard erlang distribution for your app, you probably don't want to use this.
+  </section>
+</section>
+<section class="detail" id="convert_fingerprints/1">
+
+  <div class="detail-header">
+    <a href="#convert_fingerprints/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">convert_fingerprints(FPs)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L271" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> convert_fingerprints([string() | binary()]) -> [binary()].</pre>
+
+      </div>
+
+Converts various ascii hex/base64 fingerprint formats to binary
+  </section>
+</section>
+<section class="detail" id="date_to_saml/1">
+
+  <div class="detail-header">
+    <a href="#date_to_saml/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">date_to_saml(Date)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L208" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> date_to_saml(<a href="https://www.erlang.org/doc/man/calendar.html#type-date">calendar:date</a>()) -> string() | binary().</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="datetime_to_saml/1">
+
+  <div class="detail-header">
+    <a href="#datetime_to_saml/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">datetime_to_saml(Time)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L198" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> datetime_to_saml(<a href="https://www.erlang.org/doc/man/calendar.html#type-datetime">calendar:datetime</a>()) -> <a href="#t:datetime/0">datetime</a>().</pre>
+
+      </div>
+
+Converts a calendar:datetime() into SAML time string
+  </section>
+</section>
+<section class="detail" id="import_certificate/2">
+
+  <div class="detail-header">
+    <a href="#import_certificate/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">import_certificate(EncodedCert, Identifier)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L391" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> import_certificate(EncodedCert :: string(), Identifier :: term()) -> binary().</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="import_private_key/2">
+
+  <div class="detail-header">
+    <a href="#import_private_key/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">import_private_key(EncodedKey, Identifier)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L359" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> import_private_key(EncodedKey :: string(), Identifier :: term()) -> #'RSAPrivateKey'{}.</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="load_certificate/1">
+
+  <div class="detail-header">
+    <a href="#load_certificate/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">load_certificate(Path)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L385" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> load_certificate(Path :: string()) -> binary().</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="load_metadata/1">
+
+  <div class="detail-header">
+    <a href="#load_metadata/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">load_metadata(Url)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L447" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> load_metadata(Url :: string()) -> <a href="https://hexdocs.pm/esaml/esaml.html#t:idp_metadata/0">esaml:idp_metadata</a>().</pre>
+
+      </div>
+
+Reads IDP metadata from a URL (or ETS memory cache)
+  </section>
+</section>
+<section class="detail" id="load_metadata/2">
+
+  <div class="detail-header">
+    <a href="#load_metadata/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">load_metadata(Url, Fingerprints)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L426" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> load_metadata(Url :: string(), Fingerprints :: [string() | binary()]) -> <a href="https://hexdocs.pm/esaml/esaml.html#t:idp_metadata/0">esaml:idp_metadata</a>().</pre>
+
+      </div>
+
+Reads IDP metadata from a URL (or ETS memory cache) and validates the signature
+  </section>
+</section>
+<section class="detail" id="load_private_key/1">
+
+  <div class="detail-header">
+    <a href="#load_private_key/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">load_private_key(Path)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L348" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> load_private_key(Path :: string()) -> #'RSAPrivateKey'{}.</pre>
+
+      </div>
+
+Loads a private key from a file on disk (or ETS memory cache)
+  </section>
+</section>
+<section class="detail" id="map_authn_class/1">
+
+  <div class="detail-header">
+    <a href="#map_authn_class/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">map_authn_class(AuthnClass)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L177" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> map_authn_class(AuthnClass :: string()) -> <a href="#t:authn_class/0">authn_class</a>().</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="map_if/1">
+
+  <div class="detail-header">
+    <a href="#map_if/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">map_if(K)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L244" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> map_if(term()) -> [term()].</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="map_if/2">
+
+  <div class="detail-header">
+    <a href="#map_if/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">map_if(Key, List)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L249" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> map_if(atom(), term()) -> [term()].</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="nameid_map/1">
+
+  <div class="detail-header">
+    <a href="#nameid_map/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">nameid_map(S)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L114" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> nameid_map(string()) -> <a href="#t:name_format/0">name_format</a>().</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="rev_map_authn_class/1">
+
+  <div class="detail-header">
+    <a href="#rev_map_authn_class/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">rev_map_authn_class(Context)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L158" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> rev_map_authn_class(Context :: atom()) -> string().</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="rev_nameid_map/1">
+
+  <div class="detail-header">
+    <a href="#rev_nameid_map/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">rev_nameid_map(_)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L123" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> rev_nameid_map(atom()) -> string().</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="rev_status_code_map/1">
+
+  <div class="detail-header">
+    <a href="#rev_status_code_map/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">rev_status_code_map(Status)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L142" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> rev_status_code_map(<a href="#t:status_code/0">status_code</a>() | atom()) -> string().</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="rev_subject_method_map/1">
+
+  <div class="detail-header">
+    <a href="#rev_subject_method_map/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">rev_subject_method_map(_)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L153" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> rev_subject_method_map(<a href="#t:subject_method/0">subject_method</a>()) -> string().</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="saml_to_datetime/1">
+
+  <div class="detail-header">
+    <a href="#saml_to_datetime/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">saml_to_datetime(Stamp)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L217" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> saml_to_datetime(<a href="https://hexdocs.pm/esaml/esaml.html#t:datetime/0">esaml:datetime</a>()) -> <a href="https://www.erlang.org/doc/man/calendar.html#type-datetime">calendar:datetime</a>().</pre>
+
+      </div>
+
+<p>Converts a SAML time string into a calendar:datetime()</p>Inverse of datetime_to_saml/1
+  </section>
+</section>
+<section class="detail" id="status_code_map/1">
+
+  <div class="detail-header">
+    <a href="#status_code_map/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">status_code_map(Urn)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L132" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> status_code_map(string()) -> <a href="#t:status_code/0">status_code</a>() | atom().</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="threaduntil/2">
+
+  <div class="detail-header">
+    <a href="#threaduntil/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">threaduntil(Rest, InitAcc)</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L102" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">-spec</span> threaduntil([fun((Acc :: term()) -> {error, term()} | {stop, term()} | term())],
+            InitAcc :: term()) ->
+               {error, term()} | {ok, term()}.</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="unique_id/0">
+
+  <div class="detail-header">
+    <a href="#unique_id/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">unique_id()</h1>
+
+      <a href="https://github.com/aaripurna/hund/blob/v0.1.1/src/hund.erl#L534" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+
+    </div>
+  </section>
+
+      <footer class="footer">
+        <p>
+
+            <span class="line">
+              <a href="https://hex.pm/packages/hund/0.1.1" class="footer-hex-package">Hex Package</a>
+
+              <a href="https://preview.hex.pm/preview/hund/0.1.1">Hex Preview</a>
+
+                (<a href="https://preview.hex.pm/preview/hund/0.1.1/show/src/hund.erl">current file</a>)
+
+            </span>
+
+          <span class="line">
+            <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+              Search HexDocs
+            </button>
+
+              <a href="hund.epub" title="ePub version">
+                Download ePub version
+              </a>
+
+          </span>
+        </p>
+
+        <p class="built-using">
+          Built using
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.30.7) for the
+
+            <a href="https://erlang.org" title="Erlang" target="_blank" translate="no">Erlang programming language</a>
+
+        </p>
+      </footer>
+    </div>
+  </div>
+</main>
+</div>
+
+
+  </body>
+</html>

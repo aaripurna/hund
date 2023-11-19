@@ -3,12 +3,12 @@
   hund,
   [
     {description, "an OTP library to generate SAML IDP XML and basic utilities"},
-    {vsn, "0.1.0"},
+    {vsn, "0.1.1"},
     {registered, []},
     {applications, [kernel, stdlib]},
     {env, []},
     {modules, []},
     {licenses, ["Apache-2.0"]},
-    {links, []}
+    {links, [{"GitHub", "https://github.com/aaripurna/hund"}]}
   ]
 }.
