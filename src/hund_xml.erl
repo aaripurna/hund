@@ -14,7 +14,8 @@
     build_nsinfo/2,
     decode_sp_metadata/1,
     decode_authn_request/1,
-    decode_logout_request/1
+    decode_logout_request/1,
+    decode_logout_response/1
   ]
 ).
 
@@ -723,6 +724,7 @@ decode_logout_request(Xml = #xmlElement{}) ->
         issue_instant,
         fun hund:saml_to_datetime/1
       ),
+      ?xpath_attr("/samlp:LogoutResponse/@Destination", saml_logout_response, destination),
       ?xpath_text(
         "/samlp:LogoutRequest/samlp:SessionIndex/text()",
         saml_logout_request,
@@ -730,6 +732,46 @@ decode_logout_request(Xml = #xmlElement{}) ->
       )
     ],
     #saml_logout_request{}
+  ).
+
+
+-spec decode_logout_response(Doc :: string() | #xmlElement{}) ->
+  {ok, #saml_logout_request{}} | {error, bad_issuer} | {error, term()}.
+decode_logout_response(Doc) when is_list(Doc) ->
+  {Xml, _Rest} = xmerl_scan:string(Doc, [{namespace_conformant, true}]),
+  decode_logout_response(Xml);
+
+decode_logout_response(Xml = #xmlElement{}) ->
+  Ns =
+    [
+      {samlp, "urn:oasis:names:tc:SAML:2.0:protocol"},
+      {saml, "urn:oasis:names:tc:SAML:2.0:assertion"},
+      {ds, "http://www.w3.org/2000/09/xmldsig#"}
+    ],
+  hund:threaduntil(
+    [
+      ?xpath_text_required(
+        "/samlp:LogoutResponse/saml:Issuer/text()",
+        saml_logout_response,
+        issuer,
+        bad_issuer
+      ),
+      ?xpath_attr(
+        "/samlp:LogoutResponse/@IssueInstant",
+        saml_logout_response,
+        issue_instant,
+        fun hund:saml_to_datetime/1
+      ),
+      ?xpath_attr("/samlp:LogoutResponse/@Destination", saml_logout_response, destination),
+      ?xpath_attr("/samlp:LogoutResponse/@InResponseTo", saml_logout_response, in_response_to),
+      ?xpath_attr(
+        "/samlp:LogoutResponse/samlp:Status/samlp:StatusCode/@Value",
+        saml_logout_response,
+        status,
+        fun hund:status_code_map/1
+      )
+    ],
+    #saml_logout_response{}
   ).
 
 
